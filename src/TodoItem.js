@@ -5,6 +5,10 @@ class TodoItem extends Component {
     this.props.markComplete(this.props.todo)
   }
 
+  handleDestroy = event => {
+    this.props.destroy(this.props.todo)
+  }
+
   render() {
     return (
       <li className={this.props.todo.complete ? "completed" : ""}>
@@ -17,7 +21,7 @@ class TodoItem extends Component {
           <label>
             {this.props.todo.title}
           </label>
-          <button className="destroy" />
+          <button className="destroy" onClick={this.handleDestroy} />
         </div>
         <input
           ref="editField"

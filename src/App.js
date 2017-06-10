@@ -49,6 +49,17 @@ class App extends Component {
     })
   }
 
+  destroy = todo => {
+    const todos = Object.values(this.state.todos)
+    const updated = todos
+      .filter(entry => entry.id !== todo.id)
+      .reduce((result, entry) => result[entry.id] = entry, {})
+
+    this.setState({
+      todos: updated,
+    })
+  }
+
   render() {
     return (
       <section className="todoapp">
@@ -67,6 +78,7 @@ class App extends Component {
               key={id}
               todo={todo}
               markComplete={this.markComplete}
+              destroy={this.destroy}
             />
           )}
         </ul>
