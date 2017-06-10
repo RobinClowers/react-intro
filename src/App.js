@@ -12,7 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      todos: [],
+      todos: {},
       newTodo: '',
     }
   }
@@ -25,11 +25,12 @@ class App extends Component {
     const title = this.state.newTodo.trim()
 
     if (title) {
+      const id = getId()
       this.setState({
-        todos: [
+        todos: {
           ...this.state.todos,
-          {title: title, id: getId()}
-        ],
+          [id]: {title: title, id: id}
+        },
         newTodo: '',
       })
     }
@@ -37,6 +38,15 @@ class App extends Component {
 
   handleChange = (event) => {
     this.setState({newTodo: event.target.value})
+  }
+
+  markComplete = todo => {
+    this.setState({
+      todos: {
+        ...this.state.todos,
+        [todo.id]: {...todo, complete: true},
+      }
+    })
   }
 
   render() {
@@ -52,8 +62,12 @@ class App extends Component {
             value={this.state.newTodo} />
         </header>
         <ul className="todo-list">
-          {this.state.todos.map(todo =>
-            <TodoItem key={todo.id} todo={todo} />
+          {Object.entries(this.state.todos).map(([id, todo]) =>
+            <TodoItem
+              key={id}
+              todo={todo}
+              markComplete={this.markComplete}
+            />
           )}
         </ul>
       </section>
