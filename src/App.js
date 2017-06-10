@@ -1,31 +1,60 @@
 import React, { Component } from 'react';
+import TodoItem from './TodoItem';
 import './App.css';
 
+let nextId = 1
+
+const getId = () => nextId++
+
+const EnterKey = 13
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      todos: [],
+      newTodo: '',
+    }
+  }
+
+  handleKeydown = (event) => {
+    if (event.keyCode !== EnterKey) return
+
+    event.preventDefault()
+
+    const title = this.state.newTodo.trim()
+
+    if (title) {
+      this.setState({
+        todos: [
+          ...this.state.todos,
+          {title: title, id: getId()}
+        ],
+        newTodo: '',
+      })
+    }
+  }
+
+  handleChange = (event) => {
+    this.setState({newTodo: event.target.value})
+  }
+
   render() {
     return (
       <section className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <input className="new-todo" placeholder="What needs to be done?" />
+          <input
+            className="new-todo"
+            placeholder="What needs to be done?"
+            onKeyDown={this.handleKeydown}
+            onChange={this.handleChange}
+            value={this.state.newTodo} />
         </header>
         <ul className="todo-list">
-          <li>
-            <div className="view">
-              <input
-                className="toggle"
-                type="checkbox"
-              />
-              <label>
-                Example Item
-              </label>
-              <button className="destroy" />
-            </div>
-            <input
-              ref="editField"
-              className="edit"
-            />
-          </li>
+          {this.state.todos.map(todo =>
+            <TodoItem key={todo.id} todo={todo} />
+          )}
         </ul>
       </section>
     );
